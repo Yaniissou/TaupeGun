@@ -1,0 +1,4 @@
+name: Taupegun
+version: '${project.version}'
+main: fr.yanissou.taupegun.Taupegun
+api-version: 1.20
