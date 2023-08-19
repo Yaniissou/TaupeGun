@@ -10,7 +10,7 @@ public class User {
     private final String name;
     private boolean alive;
     private int kill;
-    private Team team;
+    private TeamEnum teamEnum;
 
     private UUID lastMsg;
 
@@ -24,7 +24,7 @@ public class User {
         this.name = player.getName();
         this.alive = alive;
         this.kill = 0;
-        this.team = null;
+        this.teamEnum = null;
     }
 
 
@@ -56,12 +56,12 @@ public class User {
         this.kill++;
     }
 
-    public Team getTeam() {
-        return team;
+    public TeamEnum getTeam() {
+        return teamEnum;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeam(TeamEnum teamEnum) {
+        this.teamEnum = teamEnum;
     }
 
     public UUID getLastMsg() {
@@ -89,7 +89,7 @@ public class User {
     }
 
     public String getColoredName() {
-        return team.getPrefix() + name;
+        return teamEnum.getPrefix() + name;
     }
 
     public int getLevel() {
@@ -107,4 +107,9 @@ public class User {
     public void setExp(float exp) {
         this.exp = exp;
     }
+
+    public void setCustomTeamUnit(TeamEnum customTeamUnit) {
+        this.teamEnum = customTeamUnit;
+    }
+
 }
