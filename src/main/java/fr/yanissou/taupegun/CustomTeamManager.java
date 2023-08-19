@@ -23,7 +23,11 @@ public class CustomTeamManager {
         this.teamScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
 
         for (TeamEnum teamEnum : TeamEnum.values()) {
-            createTeam(teamEnum);
+            try {
+                createTeam(teamEnum);
+            } catch (IllegalArgumentException teamAlreadyRegistered){
+                Bukkit.getLogger().warning("Team " + teamEnum.getName() +" was already registered !");
+            }
         }
     }
 
@@ -58,9 +62,32 @@ public class CustomTeamManager {
         return null;
     }
 
+    public CustomTeam getCustomTeamByItem(ItemStack itemStack) {
+        if (customTeams.isEmpty()){
+            throw new RuntimeException("CUSTOM TEAM IS HORNY ON MAIN");
+        }
+
+        for (CustomTeam customTeam : customTeams){
+            if (customTeam.getCustomTeamUnit().getItem() != null && customTeam.getCustomTeamUnit().getItem().isSimilar(itemStack)){
+                return customTeam;
+            }
+        }
+        return null;
+
+        //^^^ marche maintenant/
+    }
+
     public void clickOnBanner(Player player, ItemStack itemStack){
-        player.sendMessage(itemStack.getItemMeta().getDisplayName());
-        player.sendMessage("§c uwu itadakimasu bakaaaa");
-        addPlayerTeam(player, getCustomTeamByName(itemStack.getItemMeta().getDisplayName()).getCustomTeamUnit());
+        try {
+            player.sendMessage(itemStack.getItemMeta().getDisplayName());
+            player.sendMessage("§c uwu itadakimasu bakaaaa");
+            addPlayerTeam(player, getCustomTeamByItem(itemStack).getCustomTeamUnit());
+            //Le probleme c'est que t'essayais de choper une team avec le nom de ton item sauf que c'était pas les memes
+            //FAIT PAS LE GOOFY ASS T
+        } catch (IllegalArgumentException cantfindteam){
+            //On sait jamais
+            player.sendMessage("Can't find selected team");
+        }
+
     }
 }

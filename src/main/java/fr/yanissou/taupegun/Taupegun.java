@@ -19,10 +19,13 @@ public final class Taupegun extends JavaPlugin {
         // Plugin startup logic
         GameState.setState(GameState.WAITING);
         FileConfiguration config = getConfig();
-        registerListeners();
+        Bukkit.getLogger().warning("Went here !");
         game = new Game();
         userManager = new UserManager();
         customTeamManager = new CustomTeamManager(this);
+
+        Bukkit.getLogger().warning("Done that");
+        registerListeners();
     }
 
     @Override
@@ -38,7 +41,7 @@ public final class Taupegun extends JavaPlugin {
         return userManager;
     }
     public CustomTeamManager getCustomTeamManager() {
-        return customTeamManager;
+        return this.customTeamManager;
     }
 
     public static Taupegun getInstance() {

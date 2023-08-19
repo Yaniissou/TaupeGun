@@ -1,11 +1,7 @@
 package fr.yanissou.taupegun.listeners;
 
-import fr.yanissou.taupegun.GameState;
-import fr.yanissou.taupegun.ItemBuilder;
-import fr.yanissou.taupegun.Taupegun;
-import fr.yanissou.taupegun.TeamEnum;
+import fr.yanissou.taupegun.*;
 import fr.yanissou.taupegun.inventories.HostInventories;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,7 +12,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class PlayerListeners implements Listener {
     private final Taupegun plugin;
@@ -58,9 +53,8 @@ public class PlayerListeners implements Listener {
 
         switch (event.getItem().getItemMeta().getDisplayName()) {
             case "§c§lConfigurer":
-                if (GameState.isState(GameState.STARTING))
-                    event.getPlayer().openInventory(HostInventories.getInventairePrincipal(true));
-                else event.getPlayer().openInventory(HostInventories.getInventairePrincipal(false));
+                // vvv ici j'ai fix aussi t'avais une condition qui faisait rien de spécial comme nepal tavu jai les refs je consomme du rap en grande quantite et pas du rap de ientcli comme tout ses bobos de gauche fan de la newvawe moi je ne suis pas de ce bord la j'adore b2o et autres rhoffs ainsi que Fouinni babe
+                event.getPlayer().openInventory(HostInventories.getInventairePrincipal(GameState.isState(GameState.STARTING)));
                 break;
             case "§b§lChoisir une équipe":
                 event.getPlayer().openInventory(HostInventories.getInventaireTeams());
@@ -82,9 +76,9 @@ public class PlayerListeners implements Listener {
             event.setCancelled(true);
         }
         else {
-            if (event.getClickedInventory().getName().equals(HostInventories.getInventaireTeams().getName())){
+            if (event.getInventory().getName() != null && event.getInventory().getName().equals(HostInventories.getInventaireTeams().getName())){
+                plugin.getCustomTeamManager().clickOnBanner((Player) event.getWhoClicked(), event.getCurrentItem());
                 event.setCancelled(true);
-                plugin.getCustomTeamManager().clickOnBanner((Player) event.getWhoClicked(),event.getCurrentItem());
             }
         }
     }
