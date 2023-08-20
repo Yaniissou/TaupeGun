@@ -1,6 +1,7 @@
 package fr.yanissou.taupegun;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
@@ -8,6 +9,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 public class CustomTeamManager {
     private final Taupegun instance;
@@ -37,16 +39,52 @@ public class CustomTeamManager {
 
     public void addPlayerTeam(Player player, TeamEnum teamEnum) {
 
-        getTeam(teamEnum).ifPresent(customTeam -> {
-            instance.getUserManager().getUser(player.getUniqueId()).ifPresent(user -> {
+        User user = instance.getUserManager().getUser(player.getUniqueId());
+
+        if (user.hasTeam()){
+            for(CustomTeam ct : customTeams){
+                ct.getUsers().remove(user.getUuid());
+            }
+        }
+
+        instance.getCustomTeamManager().getCustomTeamByName(teamEnum.getName()).getUsers().add(user.getUuid());
+        instance.getCustomTeamManager().getCustomTeamByName(teamEnum.getName()).getTeam().addEntry(player.getName());
+        user.setCustomTeamUnit(teamEnum);
+        player.setDisplayName(teamEnum.getPrefix() + player.getName() + ChatColor.RESET);
+        player.setPlayerListName(player.getDisplayName());
+        for (Player onlineplayer : Bukkit.getOnlinePlayers()){
+            updateTeamForPlayer(onlineplayer.getUniqueId());
+        }
+
+
+
+
+        //Hamza's way
+/*        getTeam(teamEnum).ifPresent(customTeam -> {
+            instance.getUserManager().getOptionalUser(player.getUniqueId()).ifPresent(user2 -> {
                 for (CustomTeam ct : customTeams) {
-                    ct.getUsers().remove(user.getUuid());
+                    ct.getUsers().remove(user2.getUuid());
                 }
                 customTeam.getTeam().addEntry(player.getName());
-                customTeam.getUsers().add(user.getUuid());
-                user.setCustomTeamUnit(teamEnum);
+                customTeam.getUsers().add(user2.getUuid());
+                user2.setCustomTeamUnit(teamEnum);
             });
-        });
+        });*/
+
+    }
+
+
+    public void updateTeamForPlayer(UUID playerUUID) {
+        // get le le joueur
+        Player player = Bukkit.getPlayer(playerUUID);
+        TeamEnum team = instance.getUserManager().getUser(playerUUID).getTeam();
+        if (player != null) {
+            // Actualiser le nom du joueur dans la tablist
+            player.setPlayerListName(team.getPrefix() + player.getName());
+
+            // set le scoreboard mis à jour au joueur
+            player.setScoreboard(getTeamScoreboard());
+        }
     }
 
     public Optional<CustomTeam> getTeam(TeamEnum teamEnum) {
@@ -62,6 +100,9 @@ public class CustomTeamManager {
         return null;
     }
 
+    /**
+     * @author EnjoyFelix
+     */
     public CustomTeam getCustomTeamByItem(ItemStack itemStack) {
         if (customTeams.isEmpty()){
             throw new RuntimeException("CUSTOM TEAM IS HORNY ON MAIN");
@@ -77,11 +118,13 @@ public class CustomTeamManager {
         //^^^ marche maintenant/
     }
 
-    public void clickOnBanner(Player player, ItemStack itemStack){
+    public void clickOnTeamBanner(Player player, ItemStack itemStack){
         try {
-            player.sendMessage(itemStack.getItemMeta().getDisplayName());
-            player.sendMessage("§c uwu itadakimasu bakaaaa");
+
+            player.setItemInHand(new ItemBuilder(player.getItemInHand()).setData(itemStack.getDurability()).build());
             addPlayerTeam(player, getCustomTeamByItem(itemStack).getCustomTeamUnit());
+            player.sendMessage(ChatColor.GRAY + "Vous avez rejoint l'équipe " + itemStack.getItemMeta().getDisplayName());
+
             //Le probleme c'est que t'essayais de choper une team avec le nom de ton item sauf que c'était pas les memes
             //FAIT PAS LE GOOFY ASS T
         } catch (IllegalArgumentException cantfindteam){
@@ -89,5 +132,9 @@ public class CustomTeamManager {
             player.sendMessage("Can't find selected team");
         }
 
+    }
+
+    public Scoreboard getTeamScoreboard() {
+        return teamScoreboard;
     }
 }

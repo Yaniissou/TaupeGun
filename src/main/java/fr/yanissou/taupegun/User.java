@@ -112,4 +112,8 @@ public class User {
         this.teamEnum = customTeamUnit;
     }
 
+    public boolean hasTeam(){
+        return this.teamEnum == null;
+    }
+
 }

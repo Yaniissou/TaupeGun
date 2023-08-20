@@ -42,7 +42,7 @@ public enum TeamEnum {
 
     PURPLE("Violet", ChatColor.DARK_PURPLE.toString(), new ItemBuilder(Material.BANNER).setData((byte) 5).setName(ChatColor.DARK_PURPLE + "Violet").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
     PURPLE1("Violet ⬤", ChatColor.DARK_PURPLE + "⬤ ", new ItemBuilder(Material.BANNER).setData((byte) 5).setName(ChatColor.DARK_PURPLE + "Violet ⬤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
-    PURPLE2("Bleu ❤", ChatColor.DARK_PURPLE + "❤ ", new ItemBuilder(Material.BANNER).setData((byte) 5).setName(ChatColor.DARK_PURPLE + "Violet ❤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
+    PURPLE2("Violet ❤", ChatColor.DARK_PURPLE + "❤ ", new ItemBuilder(Material.BANNER).setData((byte) 5).setName(ChatColor.DARK_PURPLE + "Violet ❤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
     PURPLE3("Violet ✖", ChatColor.DARK_PURPLE + "✖ ", new ItemBuilder(Material.BANNER).setData((byte) 5).setName(ChatColor.DARK_PURPLE + "Violet ✖").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
     PURPLE4("Violet ✦", ChatColor.DARK_PURPLE + "✦ ", new ItemBuilder(Material.BANNER).setData((byte) 5).setName(ChatColor.DARK_PURPLE + "Violet ✦").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
 
@@ -58,8 +58,8 @@ public enum TeamEnum {
     GRAY3("Gris ✖", ChatColor.DARK_GRAY + "✖ ", new ItemBuilder(Material.BANNER).setData((byte) 8).setName(ChatColor.DARK_GRAY + "Gris ✖").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
     GRAY4("Gris ✦", ChatColor.DARK_GRAY + "✦ ", new ItemBuilder(Material.BANNER).setData((byte) 8).setName(ChatColor.DARK_GRAY + "Gris ✦").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
 
-    LIME("010LIME", ChatColor.GREEN.toString(), new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
-    LIME1("Bleu ⬤", ChatColor.GREEN + "⬤ ", new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair ⬤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
+    LIME("Vert clair", ChatColor.GREEN.toString(), new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
+    LIME1("Vert clair ⬤", ChatColor.GREEN + "⬤ ", new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair ⬤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
 
 
     DEFAULT("998Default", ChatColor.GRAY.toString(), null),

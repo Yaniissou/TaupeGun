@@ -63,7 +63,12 @@ public class UserManager {
         player.setExp(0);
     }
 
-    public Optional<User> getUser(UUID uuid) {
+    public Optional<User> getOptionalUser(UUID uuid) {
         return Optional.ofNullable(users.get(uuid));
     }
+
+    public User getUser(UUID uuid){
+        return users.get(uuid);
+    }
+
 }

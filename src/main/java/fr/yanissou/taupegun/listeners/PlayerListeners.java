@@ -1,13 +1,15 @@
 package fr.yanissou.taupegun.listeners;
 
-import fr.yanissou.taupegun.*;
+import fr.yanissou.taupegun.GameState;
+import fr.yanissou.taupegun.Taupegun;
+import fr.yanissou.taupegun.inventories.CustomItems;
 import fr.yanissou.taupegun.inventories.HostInventories;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,24 +28,23 @@ public class PlayerListeners implements Listener {
         plugin.getUserManager().onJoin(event.getPlayer());
 
 
-
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent event){
+    public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         plugin.getUserManager().onQuit(event.getPlayer());
     }
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
-        if (!GameState.isState(GameState.WAITING)){
+        if (!GameState.isState(GameState.WAITING)) {
             return;
         }
         if (!event.hasItem()) {
             return;
         }
-        if (!event.getItem().getItemMeta().hasDisplayName()){
+        if (!event.getItem().getItemMeta().hasDisplayName()) {
             return;
         }
 
@@ -71,15 +72,42 @@ public class PlayerListeners implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
-        if (!event.getClick().equals(ClickType.LEFT)){
-            event.setCancelled(true);
+    public void onInventoryClick(InventoryClickEvent event) {
+        switch (event.getInventory().getName()){
+            case "Choix des équipes":
+                if (!event.getInventory().getName().equals(HostInventories.getInventaireTeams().getName())) {
+                    return;
+                }
+                if (event.getCurrentItem() == null) {
+                    return;
+                }
+
+                if (!(event.getCurrentItem().getType() == Material.BANNER)){
+                    event.setCancelled(true);
+                    return;
+                }
+
+                    if (event.getCurrentItem().getType() == Material.AIR){
+                        return;
+                    }
+                if (event.getCurrentItem().getItemMeta().getDisplayName().equals(CustomItems.host_teams.getItemMeta().getDisplayName())) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
+                    event.setCancelled(true);
+                    return;
+
+                }
+                if (event.getInventory().getName() != null && event.getInventory().getName().equals(HostInventories.getInventaireTeams().getName())) {
+                    plugin.getCustomTeamManager().clickOnTeamBanner((Player) event.getWhoClicked(), event.getCurrentItem());
+                    event.setCancelled(true);
+                    event.getWhoClicked().closeInventory();
+
+                }
+                break;
         }
-        else {
-            if (event.getInventory().getName() != null && event.getInventory().getName().equals(HostInventories.getInventaireTeams().getName())){
-                plugin.getCustomTeamManager().clickOnBanner((Player) event.getWhoClicked(), event.getCurrentItem());
-                event.setCancelled(true);
-            }
-        }
+
     }
 }
