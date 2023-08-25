@@ -1,5 +1,6 @@
 package fr.yanissou.taupegun;
 
+import fr.yanissou.taupegun.listeners.CutCleanListeners;
 import fr.yanissou.taupegun.listeners.PlayerListeners;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,6 +14,7 @@ public final class Taupegun extends JavaPlugin {
 
     private UserManager userManager;
     private CustomTeamManager customTeamManager;
+    private ScenarioManager scenarioManager;
 
     @Override
     public void onEnable() {
@@ -22,6 +24,7 @@ public final class Taupegun extends JavaPlugin {
         Bukkit.getLogger().warning("Went here !");
         game = new Game();
         userManager = new UserManager();
+        scenarioManager = new ScenarioManager(this);
         customTeamManager = new CustomTeamManager(this);
 
         Bukkit.getLogger().warning("Done that");
@@ -37,6 +40,11 @@ public final class Taupegun extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(this),this);
     }
 
+
+
+    public void registerActiveScenarios(){
+
+    }
     public UserManager getUserManager() {
         return userManager;
     }
@@ -48,5 +56,7 @@ public final class Taupegun extends JavaPlugin {
         return instance;
     }
 
-
+    public ScenarioManager getScenarioManager() {
+        return scenarioManager;
+    }
 }

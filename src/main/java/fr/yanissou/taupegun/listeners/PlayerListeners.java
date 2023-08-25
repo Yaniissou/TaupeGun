@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -16,16 +17,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListeners implements Listener {
-    private final Taupegun plugin;
+    private final Taupegun instance;
 
-    public PlayerListeners(Taupegun plugin) {
-        this.plugin = plugin;
+    public PlayerListeners(Taupegun instance) {
+        this.instance = instance;
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
-        plugin.getUserManager().onJoin(event.getPlayer());
+        instance.getUserManager().onJoin(event.getPlayer());
 
 
     }
@@ -33,7 +34,7 @@ public class PlayerListeners implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
-        plugin.getUserManager().onQuit(event.getPlayer());
+        instance.getUserManager().onQuit(event.getPlayer());
     }
 
     @EventHandler
@@ -72,24 +73,32 @@ public class PlayerListeners implements Listener {
     }
 
     @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        switch (event.getInventory().getName()){
+        if (GameState.isState(GameState.WAITING)){
+         //   event.setCancelled(true);
+        }
+        switch (event.getInventory().getName()) {
             case "Choix des équipes":
-                if (!event.getInventory().getName().equals(HostInventories.getInventaireTeams().getName())) {
-                    return;
-                }
+
                 if (event.getCurrentItem() == null) {
                     return;
                 }
 
-                if (!(event.getCurrentItem().getType() == Material.BANNER)){
+                if (!(event.getCurrentItem().getType() == Material.BANNER)) {
                     event.setCancelled(true);
                     return;
                 }
 
-                    if (event.getCurrentItem().getType() == Material.AIR){
-                        return;
-                    }
+                if (event.getCurrentItem().getType() == Material.AIR) {
+                    return;
+                }
                 if (event.getCurrentItem().getItemMeta().getDisplayName().equals(CustomItems.host_teams.getItemMeta().getDisplayName())) {
                     event.setCancelled(true);
                     return;
@@ -98,16 +107,73 @@ public class PlayerListeners implements Listener {
                 if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
                     event.setCancelled(true);
                     return;
-
                 }
                 if (event.getInventory().getName() != null && event.getInventory().getName().equals(HostInventories.getInventaireTeams().getName())) {
-                    plugin.getCustomTeamManager().clickOnTeamBanner((Player) event.getWhoClicked(), event.getCurrentItem());
+                    instance.getCustomTeamManager().clickOnTeamBanner((Player) event.getWhoClicked(), event.getCurrentItem());
                     event.setCancelled(true);
                     event.getWhoClicked().closeInventory();
 
                 }
                 break;
+            case "Configuration":
+                if (event.getCurrentItem() == null) {
+                    return;
+                }
+                if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (event.getCurrentItem().getType() == Material.INK_SACK){
+                    instance.getScenarioManager().registerScenarios();
+                }
+
+                if (event.getCurrentItem().getType() == Material.COMMAND) {
+                    event.setCancelled(true);
+                    event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
+                    return;
+                }
+
+                break;
+            case "Scenarios":
+
+                if (event.getCurrentItem() == null) {
+                    System.out.println("current item is null");
+                    return;
+                }
+                if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
+                    event.setCancelled(true);
+                    System.out.println("item is air or is glass");
+                    return;
+                }
+
+                if (CustomItems.scenario_items_names.contains(event.getCurrentItem().getItemMeta().getDisplayName())) {
+                    System.out.println("this is custom item");
+                    switch (event.getCurrentItem().getType()){
+                        case IRON_INGOT:
+                            instance.getScenarioManager().setCutClean(!instance.getScenarioManager().isCutClean());
+                            event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
+                            break;
+                        case DIAMOND_PICKAXE:
+                            instance.getScenarioManager().setHasteyBoys(!instance.getScenarioManager().isHasteyBoys());
+                            event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
+                            break;
+                        case IRON_PICKAXE:
+                            instance.getScenarioManager().setHasteyBabies(!instance.getScenarioManager().isHasteyBabies());
+                            event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
+                            break;
+                    }
+                }
+
+                if (event.getCurrentItem().getType().equals(Material.ARROW)){
+                    event.getWhoClicked().openInventory(HostInventories.getInventairePrincipal(GameState.isState(GameState.STARTING)));
+                }
+
         }
 
     }
 }
+
+
+
+

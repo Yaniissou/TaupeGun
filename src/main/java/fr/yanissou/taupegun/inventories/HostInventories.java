@@ -1,15 +1,17 @@
 package fr.yanissou.taupegun.inventories;
 
 
+import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.TeamEnum;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class HostInventories {
     public static final Inventory getInventairePrincipal(boolean starting) {
-        Inventory inventory = Bukkit.createInventory(null, 27, "CONFIGURATION");
+        Inventory inventory = Bukkit.createInventory(null, 27, "Configuration");
         addIndivGlass(inventory);
-
+        inventory.setItem(10,CustomItems.host_scenarios);
         if (!starting) {
             inventory.setItem(22,CustomItems.host_start);
         } else {
@@ -29,6 +31,17 @@ public class HostInventories {
             }
 
         }
+
+        return inventory;
+    }
+
+    public static final Inventory getInventaireScenarios(Taupegun instance){
+        Inventory inventory = Bukkit.createInventory(null,27,"Scenarios");
+        addIndivGlass(inventory);
+        addBasedOnConfig(inventory,CustomItems.scenario_cutclean, instance.getScenarioManager().isCutClean(),10);
+        addBasedOnConfig(inventory,CustomItems.scenario_hasteyboys,instance.getScenarioManager().isHasteyBoys(),11);
+        addBasedOnConfig(inventory,CustomItems.scenario_hasteybabies,instance.getScenarioManager().isHasteyBabies(),11);
+        inventory.setItem(22,CustomItems.host_cancel);
 
         return inventory;
     }
@@ -68,6 +81,20 @@ public class HostInventories {
 
 
     }
+
+
+    public static void addBasedOnConfig(Inventory inventory, ItemStack stack, boolean param, int index) {
+        int amount = 1;
+        if (!param){
+            amount = 0;
+        }
+
+        stack.setAmount(amount);
+        inventory.setItem(index,stack);
+
+    }
+
+
 
    /* private static void addBasedOnConfig(Inventory inventory, ItemStack stack, boolean param) {
         int amount = 1;
