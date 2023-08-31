@@ -14,8 +14,8 @@ public class TimerRunnable implements Runnable{
     private String formattedTime;
 
     public TimerRunnable(Taupegun instance){
-        this.secondes = 45;
-        this.minutes = 19;
+        this.secondes = 0;
+        this.minutes = 0;
         this.instance = instance;
     }
 
