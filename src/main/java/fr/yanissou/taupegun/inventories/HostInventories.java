@@ -4,14 +4,19 @@ package fr.yanissou.taupegun.inventories;
 import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.TeamEnum;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import javax.swing.text.AttributeSet;
 
 public class HostInventories {
-    public static final Inventory getInventairePrincipal(boolean starting) {
+    public static Inventory getInventairePrincipal(boolean starting) {
         Inventory inventory = Bukkit.createInventory(null, 27, "Configuration");
         addIndivGlass(inventory);
         inventory.setItem(10,CustomItems.host_scenarios);
+        inventory.setItem(11,CustomItems.host_border);
         if (!starting) {
             inventory.setItem(22,CustomItems.host_start);
         } else {
@@ -22,7 +27,7 @@ public class HostInventories {
         return inventory;
     }
 
-    public static final Inventory getInventaireTeams() {
+    public static Inventory getInventaireTeams() {
         Inventory inventory = Bukkit.createInventory(null, 54, "Choix des équipes");
         addIndivGlass(inventory);
         for (TeamEnum teamEnum : TeamEnum.values()){
@@ -35,13 +40,23 @@ public class HostInventories {
         return inventory;
     }
 
-    public static final Inventory getInventaireScenarios(Taupegun instance){
+    public static Inventory getInventaireScenarios(Taupegun instance){
         Inventory inventory = Bukkit.createInventory(null,27,"Scenarios");
         addIndivGlass(inventory);
         addBasedOnConfig(inventory,CustomItems.scenario_cutclean, instance.getScenarioManager().isCutClean(),10);
         addBasedOnConfig(inventory,CustomItems.scenario_hasteyboys,instance.getScenarioManager().isHasteyBoys(),11);
-        addBasedOnConfig(inventory,CustomItems.scenario_hasteybabies,instance.getScenarioManager().isHasteyBabies(),11);
+        addBasedOnConfig(inventory,CustomItems.scenario_hasteybabies,instance.getScenarioManager().isHasteyBabies(),12);
         inventory.setItem(22,CustomItems.host_cancel);
+
+        return inventory;
+    }
+
+    public static Inventory getInventaireBorder(Taupegun instance){
+        Inventory inventory = Bukkit.createInventory(null,27,"Bordure");
+        addIndivGlass(inventory);
+
+        inventory.setItem(10,setBorderInitializeInfo(CustomItems.border_initialSize,instance));
+        inventory.setItem(11,setBorderFinalInfo(CustomItems.border_finalSize,instance));
 
         return inventory;
     }
@@ -92,6 +107,20 @@ public class HostInventories {
         stack.setAmount(amount);
         inventory.setItem(index,stack);
 
+    }
+
+    public static ItemStack setBorderInitializeInfo(ItemStack it, Taupegun instance){
+        ItemMeta im = it.getItemMeta();
+        im.setDisplayName(ChatColor.AQUA + "Taille initiale : " + instance.getBorderManager().getInitialBordersSize());
+        it.setItemMeta(im);
+        return it;
+    }
+
+    public static ItemStack setBorderFinalInfo(ItemStack it, Taupegun instance){
+        ItemMeta im = it.getItemMeta();
+        im.setDisplayName(ChatColor.AQUA + "Taille finale : " + instance.getBorderManager().getFinalBordersSize());
+        it.setItemMeta(im);
+        return it;
     }
 
 

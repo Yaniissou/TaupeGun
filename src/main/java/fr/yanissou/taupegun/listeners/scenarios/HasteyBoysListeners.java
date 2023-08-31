@@ -1,4 +1,4 @@
-package fr.yanissou.taupegun.listeners;
+package fr.yanissou.taupegun.listeners.scenarios;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;

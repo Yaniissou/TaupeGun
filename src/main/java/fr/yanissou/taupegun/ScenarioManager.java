@@ -1,7 +1,8 @@
 package fr.yanissou.taupegun;
 
-import fr.yanissou.taupegun.listeners.CutCleanListeners;
-import fr.yanissou.taupegun.listeners.HasteyBoysListeners;
+import fr.yanissou.taupegun.listeners.scenarios.CutCleanListeners;
+import fr.yanissou.taupegun.listeners.scenarios.HasteyBabiesListeners;
+import fr.yanissou.taupegun.listeners.scenarios.HasteyBoysListeners;
 import org.bukkit.Bukkit;
 
 public class ScenarioManager {
@@ -48,6 +49,9 @@ public class ScenarioManager {
         }
         if (isHasteyBoys()){
             Bukkit.getPluginManager().registerEvents(new HasteyBoysListeners(),instance);
+        }
+        if (isHasteyBabies()){
+            Bukkit.getPluginManager().registerEvents(new HasteyBabiesListeners(),instance);
         }
     }
 }

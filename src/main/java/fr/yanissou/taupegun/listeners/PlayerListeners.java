@@ -1,5 +1,6 @@
 package fr.yanissou.taupegun.listeners;
 
+import fr.yanissou.taupegun.Game;
 import fr.yanissou.taupegun.GameState;
 import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.inventories.CustomItems;
@@ -11,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,6 +29,7 @@ public class PlayerListeners implements Listener {
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         instance.getUserManager().onJoin(event.getPlayer());
+        instance.getScoreboardManager().onLogin(event.getPlayer());
 
 
     }
@@ -35,11 +38,12 @@ public class PlayerListeners implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         event.setQuitMessage(null);
         instance.getUserManager().onQuit(event.getPlayer());
+        instance.getScoreboardManager().onLogout(event.getPlayer());
     }
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
-        if (!GameState.isState(GameState.WAITING)) {
+        if (!GameState.isState(GameState.WAITING) && !GameState.isState(GameState.STARTING)) {
             return;
         }
         if (!event.hasItem()) {
@@ -82,7 +86,7 @@ public class PlayerListeners implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (GameState.isState(GameState.WAITING)){
-         //   event.setCancelled(true);
+            event.setCancelled(true);
         }
         switch (event.getInventory().getName()) {
             case "Choix des équipes":
@@ -116,39 +120,26 @@ public class PlayerListeners implements Listener {
                 }
                 break;
             case "Configuration":
-                if (event.getCurrentItem() == null) {
-                    return;
-                }
-                if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if (event.getCurrentItem().getType() == Material.INK_SACK){
-                    instance.getScenarioManager().registerScenarios();
-                }
-
-                if (event.getCurrentItem().getType() == Material.COMMAND) {
-                    event.setCancelled(true);
-                    event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
-                    return;
+                if (!isValid(event)) return;
+                switch (event.getCurrentItem().getType()){
+                    case INK_SACK:
+                        instance.getScenarioManager().registerScenarios();
+                        instance.getGame().startrebours();
+                        break;
+                    case COMMAND:
+                        event.setCancelled(true);
+                        event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
+                        break;
+                    case BARRIER:
+                        event.getWhoClicked().openInventory(HostInventories.getInventaireBorder(instance));
+                        break;
                 }
 
-                break;
             case "Scenarios":
 
-                if (event.getCurrentItem() == null) {
-                    System.out.println("current item is null");
-                    return;
-                }
-                if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
-                    event.setCancelled(true);
-                    System.out.println("item is air or is glass");
-                    return;
-                }
+               if (!isValid(event)) return;
 
                 if (CustomItems.scenario_items_names.contains(event.getCurrentItem().getItemMeta().getDisplayName())) {
-                    System.out.println("this is custom item");
                     switch (event.getCurrentItem().getType()){
                         case IRON_INGOT:
                             instance.getScenarioManager().setCutClean(!instance.getScenarioManager().isCutClean());
@@ -159,8 +150,10 @@ public class PlayerListeners implements Listener {
                             event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
                             break;
                         case IRON_PICKAXE:
+                            System.out.println("WENT HERE");
                             instance.getScenarioManager().setHasteyBabies(!instance.getScenarioManager().isHasteyBabies());
                             event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
+                            System.out.println(instance.getScenarioManager().isHasteyBabies());
                             break;
                     }
                 }
@@ -168,9 +161,40 @@ public class PlayerListeners implements Listener {
                 if (event.getCurrentItem().getType().equals(Material.ARROW)){
                     event.getWhoClicked().openInventory(HostInventories.getInventairePrincipal(GameState.isState(GameState.STARTING)));
                 }
-
+            case "Bordure":
+                if (!isValid(event)) return;
+                if (event.getCurrentItem().isSimilar(CustomItems.border_initialSize)){
+                    switch (event.getClick()){
+                        case LEFT:
+                            instance.getBorderManager().addInitialBorder();
+                            break;
+                        case RIGHT:
+                            instance.getBorderManager().subInitialBorder();
+                    }
+                    event.getWhoClicked().openInventory(HostInventories.getInventaireBorder(instance));
+                }
+                else if (event.getCurrentItem().isSimilar(CustomItems.border_finalSize)){
+                    switch (event.getClick()){
+                        case LEFT:
+                            instance.getBorderManager().addFinalBorder();
+                            break;
+                        case RIGHT:
+                            instance.getBorderManager().subFinalBorder();
+                    }
+                    event.getWhoClicked().openInventory(HostInventories.getInventaireBorder(instance));
+                }
         }
 
+    }
+
+    private static boolean isValid(InventoryClickEvent event){
+        if (event.getCurrentItem() == null) {
+            return false;
+        }
+        if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
+            event.setCancelled(true);
+            return false;
+        } else return true;
     }
 }
 

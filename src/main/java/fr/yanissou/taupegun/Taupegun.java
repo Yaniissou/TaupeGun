@@ -1,10 +1,13 @@
 package fr.yanissou.taupegun;
 
-import fr.yanissou.taupegun.listeners.CutCleanListeners;
 import fr.yanissou.taupegun.listeners.PlayerListeners;
+import fr.yanissou.taupegun.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public final class Taupegun extends JavaPlugin {
 
@@ -12,9 +15,14 @@ public final class Taupegun extends JavaPlugin {
 
     public static Game game;
 
+    private ScheduledExecutorService executorMonoThread;
+    private ScheduledExecutorService scheduledExecutorService;
+
     private UserManager userManager;
     private CustomTeamManager customTeamManager;
     private ScenarioManager scenarioManager;
+    private BorderManager borderManager;
+    private ScoreboardManager scoreboardManager;
 
     @Override
     public void onEnable() {
@@ -22,10 +30,16 @@ public final class Taupegun extends JavaPlugin {
         GameState.setState(GameState.WAITING);
         FileConfiguration config = getConfig();
         Bukkit.getLogger().warning("Went here !");
-        game = new Game();
+        instance = this;
+        game = new Game(instance);
         userManager = new UserManager();
         scenarioManager = new ScenarioManager(this);
         customTeamManager = new CustomTeamManager(this);
+        borderManager = new BorderManager();
+        scheduledExecutorService = Executors.newScheduledThreadPool(16);
+        executorMonoThread = Executors.newScheduledThreadPool(1);
+        scoreboardManager = new ScoreboardManager();
+
 
         Bukkit.getLogger().warning("Done that");
         registerListeners();
@@ -34,6 +48,7 @@ public final class Taupegun extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        getScoreboardManager().onDisable();
     }
 
     public void registerListeners(){
@@ -58,5 +73,25 @@ public final class Taupegun extends JavaPlugin {
 
     public ScenarioManager getScenarioManager() {
         return scenarioManager;
+    }
+
+    public BorderManager getBorderManager() {
+        return borderManager;
+    }
+
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
+    public ScheduledExecutorService getExecutorMonoThread() {
+        return executorMonoThread;
+    }
+
+    public ScheduledExecutorService getScheduledExecutorService() {
+        return scheduledExecutorService;
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

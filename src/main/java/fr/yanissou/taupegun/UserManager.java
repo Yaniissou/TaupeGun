@@ -71,4 +71,7 @@ public class UserManager {
         return users.get(uuid);
     }
 
+    public Map<UUID, User> getUsers() {
+        return users;
+    }
 }
