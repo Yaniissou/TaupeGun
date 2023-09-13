@@ -1,7 +1,6 @@
 package fr.yanissou.taupegun.inventories;
 
 import fr.yanissou.taupegun.ItemBuilder;
-import fr.yanissou.taupegun.Taupegun;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -27,6 +26,7 @@ public class CustomItems {
     public static final ItemStack host_stop = new ItemBuilder(Material.INK_SACK).setData(DyeColor.RED.getDyeData()).setName("§c§lStopper le lancement").build();
     public static final ItemStack host_scenarios = new ItemBuilder(Material.COMMAND).setName(ChatColor.AQUA + "Scenarios").setLore(ChatColor.GRAY + "Configurer les scenarios").build();
     public static final ItemStack host_border = new ItemBuilder(Material.BARRIER).setName(ChatColor.AQUA + "Bordure").setLore(ChatColor.GRAY + "Configurer la bordure").build();
+    public static final ItemStack host_timers = new ItemBuilder(Material.WATCH).setName(ChatColor.AQUA + "Timers").setLore(ChatColor.GRAY + "Configurer les timers").build();
 
 
     public static final ItemStack scenario_cutclean = new ItemBuilder(Material.IRON_INGOT).setName(ChatColor.AQUA + "CutClean")
@@ -49,4 +49,11 @@ public class CustomItems {
     public static final ItemStack border_finalSize = new ItemBuilder(Material.BANNER).setData((short) 2)
             .setName(ChatColor.AQUA + "Taille finale :")
             .setLore(lore_add,lore_sub).build();
+    public static final ItemStack timer_border = new ItemBuilder(Material.BARRIER)
+            .setName(ChatColor.AQUA + "Activation de la Bordure : xx:xx")
+            .setLore(lore_add,lore_sub).build();
+    public static final ItemStack timer_pvp = new ItemBuilder(Material.DIAMOND_SWORD)
+            .setName(ChatColor.AQUA + "Activation du PvP : xx:xx" )
+            .setLore(lore_add,lore_sub).build();
+
 }

@@ -5,11 +5,10 @@ import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.TeamEnum;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import javax.swing.text.AttributeSet;
 
 public class HostInventories {
     public static Inventory getInventairePrincipal(boolean starting) {
@@ -17,6 +16,7 @@ public class HostInventories {
         addIndivGlass(inventory);
         inventory.setItem(10,CustomItems.host_scenarios);
         inventory.setItem(11,CustomItems.host_border);
+        inventory.setItem(12,CustomItems.host_timers);
         if (!starting) {
             inventory.setItem(22,CustomItems.host_start);
         } else {
@@ -58,6 +58,15 @@ public class HostInventories {
         inventory.setItem(10,setBorderInitializeInfo(CustomItems.border_initialSize,instance));
         inventory.setItem(11,setBorderFinalInfo(CustomItems.border_finalSize,instance));
 
+        return inventory;
+    }
+
+    public static Inventory getInventaireTimer(Taupegun instance){
+        Inventory inventory = Bukkit.createInventory(null,27,"Timers");
+        addIndivGlass(inventory);
+
+        inventory.setItem(10,setBorderActivationInfo(CustomItems.timer_border,instance));
+        inventory.setItem(11,setPvPActivationInfo(CustomItems.timer_pvp,instance));
         return inventory;
     }
 
@@ -122,6 +131,39 @@ public class HostInventories {
         it.setItemMeta(im);
         return it;
     }
+
+    public static ItemStack setBorderActivationInfo(ItemStack it, Taupegun instance){
+        ItemMeta im = it.getItemMeta();
+        im.setDisplayName(ChatColor.AQUA + "Activation de la Bordure : " + formatTimeHoursMinutes(instance.getBorderManager().getBorderTime()));
+        it.setItemMeta(im);
+        return it;
+    }
+
+    public static ItemStack setPvPActivationInfo(ItemStack it,Taupegun instance){
+        ItemMeta im = it.getItemMeta();
+        im.setDisplayName(ChatColor.AQUA + "Activation du PvP : " + secondsToMinutes(instance.getPvpManager().getPvpTime()) + "mins");
+        it.setItemMeta(im);
+        return it;
+    }
+
+    public static String formatTimeHoursMinutes(int minutes){
+
+        // Calculate hours and minutes
+        int hours = minutes / 60;
+        int remainingMinutes = minutes % 60;
+
+        // Format the time using String.format with leading zeros
+
+        return String.format("%02dh%02d", hours, remainingMinutes);
+    }
+
+    public static String secondsToMinutes(int seconds){
+        return String.valueOf(seconds/60);
+    }
+
+
+
+
 
 
 

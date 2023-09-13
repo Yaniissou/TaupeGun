@@ -1,9 +1,12 @@
 package fr.yanissou.taupegun;
 
 import fr.yanissou.taupegun.inventories.CustomItems;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -74,4 +77,6 @@ public class UserManager {
     public Map<UUID, User> getUsers() {
         return users;
     }
+    
+
 }

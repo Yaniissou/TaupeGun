@@ -23,6 +23,7 @@ public final class Taupegun extends JavaPlugin {
     private ScenarioManager scenarioManager;
     private BorderManager borderManager;
     private ScoreboardManager scoreboardManager;
+    private PvPManager pvpManager;
 
     @Override
     public void onEnable() {
@@ -36,6 +37,7 @@ public final class Taupegun extends JavaPlugin {
         scenarioManager = new ScenarioManager(this);
         customTeamManager = new CustomTeamManager(this);
         borderManager = new BorderManager();
+        pvpManager = new PvPManager();
         scheduledExecutorService = Executors.newScheduledThreadPool(16);
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
@@ -81,6 +83,10 @@ public final class Taupegun extends JavaPlugin {
 
     public ScoreboardManager getScoreboardManager() {
         return scoreboardManager;
+    }
+
+    public PvPManager getPvpManager() {
+        return pvpManager;
     }
 
     public ScheduledExecutorService getExecutorMonoThread() {

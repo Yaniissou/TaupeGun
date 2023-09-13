@@ -1,22 +1,26 @@
 package fr.yanissou.taupegun.listeners;
 
-import fr.yanissou.taupegun.Game;
 import fr.yanissou.taupegun.GameState;
 import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.inventories.CustomItems;
 import fr.yanissou.taupegun.inventories.HostInventories;
+import net.minecraft.server.v1_8_R3.IChatBaseComponent;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.lang.reflect.Field;
 
 public class PlayerListeners implements Listener {
     private final Taupegun instance;
@@ -25,12 +29,22 @@ public class PlayerListeners implements Listener {
         this.instance = instance;
     }
 
+    private static boolean isValid(InventoryClickEvent event) {
+        if (event.getCurrentItem() == null) {
+            return false;
+        }
+        if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
+            event.setCancelled(true);
+            return false;
+        } else return true;
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         event.setJoinMessage(null);
         instance.getUserManager().onJoin(event.getPlayer());
         instance.getScoreboardManager().onLogin(event.getPlayer());
-
+        setTab(event.getPlayer());
 
     }
 
@@ -85,7 +99,7 @@ public class PlayerListeners implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (GameState.isState(GameState.WAITING)){
+        if (GameState.isState(GameState.WAITING)) {
             event.setCancelled(true);
         }
         switch (event.getInventory().getName()) {
@@ -121,7 +135,7 @@ public class PlayerListeners implements Listener {
                 break;
             case "Configuration":
                 if (!isValid(event)) return;
-                switch (event.getCurrentItem().getType()){
+                switch (event.getCurrentItem().getType()) {
                     case INK_SACK:
                         instance.getScenarioManager().registerScenarios();
                         instance.getGame().startrebours();
@@ -133,14 +147,17 @@ public class PlayerListeners implements Listener {
                     case BARRIER:
                         event.getWhoClicked().openInventory(HostInventories.getInventaireBorder(instance));
                         break;
+                    case WATCH:
+                        event.setCancelled(true);
+                        event.getWhoClicked().openInventory(HostInventories.getInventaireTimer(instance));
                 }
 
             case "Scenarios":
 
-               if (!isValid(event)) return;
+                if (!isValid(event)) return;
 
                 if (CustomItems.scenario_items_names.contains(event.getCurrentItem().getItemMeta().getDisplayName())) {
-                    switch (event.getCurrentItem().getType()){
+                    switch (event.getCurrentItem().getType()) {
                         case IRON_INGOT:
                             instance.getScenarioManager().setCutClean(!instance.getScenarioManager().isCutClean());
                             event.getWhoClicked().openInventory(HostInventories.getInventaireScenarios(instance));
@@ -158,13 +175,13 @@ public class PlayerListeners implements Listener {
                     }
                 }
 
-                if (event.getCurrentItem().getType().equals(Material.ARROW)){
+                if (event.getCurrentItem().getType().equals(Material.ARROW)) {
                     event.getWhoClicked().openInventory(HostInventories.getInventairePrincipal(GameState.isState(GameState.STARTING)));
                 }
             case "Bordure":
                 if (!isValid(event)) return;
-                if (event.getCurrentItem().isSimilar(CustomItems.border_initialSize)){
-                    switch (event.getClick()){
+                if (event.getCurrentItem().isSimilar(CustomItems.border_initialSize)) {
+                    switch (event.getClick()) {
                         case LEFT:
                             instance.getBorderManager().addInitialBorder();
                             break;
@@ -172,9 +189,8 @@ public class PlayerListeners implements Listener {
                             instance.getBorderManager().subInitialBorder();
                     }
                     event.getWhoClicked().openInventory(HostInventories.getInventaireBorder(instance));
-                }
-                else if (event.getCurrentItem().isSimilar(CustomItems.border_finalSize)){
-                    switch (event.getClick()){
+                } else if (event.getCurrentItem().isSimilar(CustomItems.border_finalSize)) {
+                    switch (event.getClick()) {
                         case LEFT:
                             instance.getBorderManager().addFinalBorder();
                             break;
@@ -183,20 +199,55 @@ public class PlayerListeners implements Listener {
                     }
                     event.getWhoClicked().openInventory(HostInventories.getInventaireBorder(instance));
                 }
+                break;
+            case "Timers":
+                if (!isValid(event)) return;
+                if (event.getCurrentItem().isSimilar(CustomItems.timer_border)){
+                    switch (event.getClick()){
+                        case LEFT:
+                            instance.getBorderManager().addActivationBorder();
+                            break;
+                        case RIGHT:
+                            instance.getBorderManager().subActivationBorder();
+                            break;
+                    }
+                    event.getWhoClicked().openInventory(HostInventories.getInventaireTimer(instance));
+                } else if (event.getCurrentItem().isSimilar(CustomItems.timer_pvp)){
+                    switch (event.getClick()){
+                        case LEFT:
+                            instance.getPvpManager().addPvPTime();
+                            break;
+                        case RIGHT:
+                            instance.getPvpManager().subPvPTime();
+                            break;
+                    }
+                    event.getWhoClicked().openInventory(HostInventories.getInventaireTimer(instance));
+                }
         }
 
     }
 
-    private static boolean isValid(InventoryClickEvent event){
-        if (event.getCurrentItem() == null) {
-            return false;
+    public void setTab(Player player) {
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+
+        // Set the header and footer
+        IChatBaseComponent header = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + ChatColor.RED + "\n§c§lTAUPE GUN\n" + "\"}");
+        IChatBaseComponent footer = IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + ChatColor.YELLOW + "\n§7Plugin par §cYanissou"+ "\"}");
+
+        PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter(header);
+        try {
+            Field field = packet.getClass().getDeclaredField("b");
+            field.setAccessible(true);
+            field.set(packet, footer);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (event.getCurrentItem().getType() == Material.AIR || event.getCurrentItem().isSimilar(CustomItems.host_glass)) {
-            event.setCancelled(true);
-            return false;
-        } else return true;
+
+        // Send the packet to the player
+        craftPlayer.getHandle().playerConnection.sendPacket(packet);
     }
 }
+
 
 
 

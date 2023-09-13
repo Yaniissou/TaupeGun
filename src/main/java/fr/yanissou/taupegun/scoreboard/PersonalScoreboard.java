@@ -41,18 +41,22 @@ public class PersonalScoreboard {
     public void reloadData(){}
 
     public void setLines(String ip){
-        objectiveSign.setDisplayName("§6Taupe Gun");
+        objectiveSign.setDisplayName("§cTaupe Gun");
         if (GameState.isState(GameState.WAITING)){
             objectiveSign.setLine(0, "§1");
-            objectiveSign.setLine(1, "§6Statut: §a" + GameState.getState().getName());
-            objectiveSign.setLine(2, "§6Joueurs: §a" + Bukkit.getOnlinePlayers().size() + "/20");
+            objectiveSign.setLine(1, "§7Joueurs: §c" + Bukkit.getOnlinePlayers().size());
+            objectiveSign.setLine(2, "§2");
             objectiveSign.updateLines();
         } else if (GameState.isState(GameState.PLAYING)){
             objectiveSign.setLine(0, "§1");
-            objectiveSign.setLine(1, "§6Episode " + Taupegun.getInstance().getGame().getEpisode());
-            objectiveSign.setLine(2, "§b" + Bukkit.getOnlinePlayers().size() + " joueurs");
+            objectiveSign.setLine(1, "§7Episode §c" + Taupegun.getInstance().getGame().getEpisode());
+            if(Bukkit.getOnlinePlayers().size() == 1){
+                objectiveSign.setLine(2, "§c" + Bukkit.getOnlinePlayers().size() + " §7joueur");
+            }else {
+                objectiveSign.setLine(2, "§c" + Bukkit.getOnlinePlayers().size() + " §7joueurs");
+            }
             objectiveSign.setLine(3, "§2");
-            objectiveSign.setLine(4,"§6Timer: §e" + Taupegun.getInstance().getGame().getTimerRunnable().getFormattedTime());
+            objectiveSign.setLine(4,"§7Timer: §c" + Taupegun.getInstance().getGame().getTimerRunnable().getFormattedTime());
             objectiveSign.setLine(5,"§3");
             objectiveSign.setLine(6, ip);
 

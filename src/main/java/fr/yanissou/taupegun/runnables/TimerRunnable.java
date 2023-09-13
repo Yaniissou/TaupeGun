@@ -1,6 +1,7 @@
 package fr.yanissou.taupegun.runnables;
 
 import fr.yanissou.taupegun.Taupegun;
+import fr.yanissou.taupegun.tools.Prefix;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitTask;
@@ -14,8 +15,8 @@ public class TimerRunnable implements Runnable{
     private String formattedTime;
 
     public TimerRunnable(Taupegun instance){
-        this.secondes = 0;
-        this.minutes = 0;
+        this.secondes = 50;
+        this.minutes = 19;
         this.instance = instance;
     }
 
@@ -45,6 +46,6 @@ public class TimerRunnable implements Runnable{
     }
     private void changeEpisode(){
         instance.getGame().addEpisode();
-        Bukkit.broadcastMessage(ChatColor.GOLD + "Début du jour " + ChatColor.YELLOW + instance.getGame().getEpisode());
+        Bukkit.broadcastMessage(Prefix.TAUPEGUN.getPrefix() + "§7Début du jour " + ChatColor.RED + instance.getGame().getEpisode());
     }
 }

@@ -11,7 +11,7 @@ public class BorderManager {
     private boolean border;
 
     public BorderManager() {
-        this.borderTime = 2 * 120;
+        this.borderTime = 120;
         this.initialBordersSize = 750 * 2;
         this.finalBordersSize = 125 * 2;
         this.bordersSpeed = 10;
@@ -104,6 +104,13 @@ public class BorderManager {
 
     public void subFinalBorder(){
         this.finalBordersSize = finalBordersSize - 50;
+    }
+
+    public void addActivationBorder(){
+        this.borderTime = this.borderTime + 10;
+    }
+    public void subActivationBorder(){
+        this.borderTime = this.borderTime - 10;
     }
 
     public void addBorderSpeed(){
