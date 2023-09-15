@@ -6,10 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class CustomTeamManager {
     private final Taupegun instance;
@@ -87,6 +84,16 @@ public class CustomTeamManager {
         }
     }
 
+    /**
+     * Ne doit être appelée qu'au lancement du serveur
+     * @param players Bukkit.getOnlinePlayers();
+     */
+    public void resetTeams(Collection<? extends Player> players){
+        players.forEach(player -> {
+            updateTeamForPlayer(player.getUniqueId());
+        });
+    }
+
     public Optional<CustomTeam> getTeam(TeamEnum teamEnum) {
         return customTeams.stream().filter(customTeam -> customTeam.getCustomTeamUnit() == teamEnum).findFirst();
     }
@@ -136,5 +143,9 @@ public class CustomTeamManager {
 
     public Scoreboard getTeamScoreboard() {
         return teamScoreboard;
+    }
+
+    public Set<CustomTeam> getCustomTeams() {
+        return customTeams;
     }
 }

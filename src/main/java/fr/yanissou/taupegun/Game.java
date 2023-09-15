@@ -2,8 +2,12 @@ package fr.yanissou.taupegun;
 
 import fr.yanissou.taupegun.runnables.StartRunnable;
 import fr.yanissou.taupegun.runnables.TimerRunnable;
+import fr.yanissou.taupegun.tools.Prefix;
+import org.apache.commons.lang.ObjectUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -55,5 +59,29 @@ public class Game {
 
     public int getEpisode() {
         return episode;
+    }
+
+    private void teleportPlayers(float distance){
+
+        float incremente = 0;
+        float min = (float) (2 * Math.PI/instance.getCustomTeamManager().getCustomTeams().size());
+
+        for (CustomTeam customTeam : instance.getCustomTeamManager().getCustomTeams()) {
+            Location center = world.getSpawnLocation();
+            Location location = new Location(world,0,world.getHighestBlockYAt(0,0),0);
+            int dx = (int) (Math.cos(incremente) * distance);
+            int dy = (int) (Math.sin(incremente) * distance);
+            incremente += min;
+
+            for (UUID uuid : customTeam.getUsers()){
+                try {
+                    Player player = Bukkit.getPlayer(uuid);
+
+                }catch(NullPointerException e){
+                    Bukkit.getLogger().warning(Prefix.CLIDEBUG + " Getting player by a UUID went bad (Game.java)");
+                }
+            }
+        }
+
     }
 }

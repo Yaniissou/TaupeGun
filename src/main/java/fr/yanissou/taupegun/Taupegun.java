@@ -1,11 +1,14 @@
 package fr.yanissou.taupegun;
 
+import com.sk89q.worldedit.entity.Player;
 import fr.yanissou.taupegun.listeners.PlayerListeners;
 import fr.yanissou.taupegun.scoreboard.ScoreboardManager;
+import fr.yanissou.taupegun.tools.Prefix;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -30,7 +33,6 @@ public final class Taupegun extends JavaPlugin {
         // Plugin startup logic
         GameState.setState(GameState.WAITING);
         FileConfiguration config = getConfig();
-        Bukkit.getLogger().warning("Went here !");
         instance = this;
         game = new Game(instance);
         userManager = new UserManager();
@@ -41,9 +43,9 @@ public final class Taupegun extends JavaPlugin {
         scheduledExecutorService = Executors.newScheduledThreadPool(16);
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
+        customTeamManager.resetTeams(Bukkit.getOnlinePlayers());
 
-
-        Bukkit.getLogger().warning("Done that");
+        Bukkit.getLogger().warning(Prefix.CLIDEBUG.getPrefix() + " Starting is done, registering listeners");
         registerListeners();
     }
 
@@ -56,19 +58,12 @@ public final class Taupegun extends JavaPlugin {
     public void registerListeners(){
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(this),this);
     }
-
-
-
-    public void registerActiveScenarios(){
-
-    }
     public UserManager getUserManager() {
         return userManager;
     }
     public CustomTeamManager getCustomTeamManager() {
         return this.customTeamManager;
     }
-
     public static Taupegun getInstance() {
         return instance;
     }
@@ -100,4 +95,6 @@ public final class Taupegun extends JavaPlugin {
     public Game getGame() {
         return game;
     }
+
+
 }
