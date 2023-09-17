@@ -59,11 +59,8 @@ public enum TeamEnum {
     GRAY4("Gris ✦", ChatColor.DARK_GRAY + "✦ ", new ItemBuilder(Material.BANNER).setData((byte) 8).setName(ChatColor.DARK_GRAY + "Gris ✦").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
 
     LIME("Vert clair", ChatColor.GREEN.toString(), new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
-    LIME1("Vert clair ⬤", ChatColor.GREEN + "⬤ ", new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair ⬤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build()),
+    LIME1("Vert clair ⬤", ChatColor.GREEN + "⬤ ", new ItemBuilder(Material.BANNER).setData((byte) 10).setName(ChatColor.GREEN + "Vert clair ⬤").setLore(ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide", ChatColor.GRAY + "- " + ChatColor.ITALIC + "vide").build());
 
-
-    DEFAULT("998Default", ChatColor.GRAY.toString(), null),
-    SPECTATORS("999Spectators", ChatColor.GRAY + "§o[SPEC] ", null);
 
     TeamEnum(String name, String prefix, ItemStack item) {
         this.name = name;

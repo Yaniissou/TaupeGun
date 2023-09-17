@@ -30,8 +30,7 @@ public class HostInventories {
     public static Inventory getInventaireTeams() {
         Inventory inventory = Bukkit.createInventory(null, 54, "Choix des équipes");
         addIndivGlass(inventory);
-        for (TeamEnum teamEnum : TeamEnum.values()){
-            if (!teamEnum.equals(TeamEnum.DEFAULT) && !teamEnum.equals(TeamEnum.SPECTATORS)){
+        for (TeamEnum teamEnum : TeamEnum.values()){{
                 inventory.addItem(teamEnum.getItem());
             }
 
