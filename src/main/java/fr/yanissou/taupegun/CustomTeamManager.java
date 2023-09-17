@@ -130,6 +130,7 @@ public class CustomTeamManager {
 
             player.setItemInHand(new ItemBuilder(player.getItemInHand()).setData(itemStack.getDurability()).build());
             addPlayerTeam(player, getCustomTeamByItem(itemStack).getCustomTeamUnit());
+
             player.sendMessage(ChatColor.GRAY + "Vous avez rejoint l'équipe " + itemStack.getItemMeta().getDisplayName());
 
             //Le probleme c'est que t'essayais de choper une team avec le nom de ton item sauf que c'était pas les memes

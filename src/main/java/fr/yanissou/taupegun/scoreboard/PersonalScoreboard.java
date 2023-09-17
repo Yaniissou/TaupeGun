@@ -40,7 +40,7 @@ public class PersonalScoreboard {
 
     public void reloadData(){}
 
-    public void setLines(String ip){
+    public void setLines(){
         objectiveSign.setDisplayName("§cTaupe Gun");
         if (GameState.isState(GameState.WAITING)){
             objectiveSign.setLine(0, "§1");
@@ -58,7 +58,6 @@ public class PersonalScoreboard {
             objectiveSign.setLine(3, "§2");
             objectiveSign.setLine(4,"§7Timer: §c" + Taupegun.getInstance().getGame().getTimerRunnable().getFormattedTime());
             objectiveSign.setLine(5,"§3");
-            objectiveSign.setLine(6, ip);
 
             objectiveSign.updateLines();
         }

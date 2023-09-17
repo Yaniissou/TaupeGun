@@ -1,11 +1,9 @@
 package fr.yanissou.taupegun.runnables;
 
-import com.connorlinfoot.titleapi.TitleAPI;
 import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.tools.Prefix;
-import fr.yanissou.taupegun.tools.Reflection;
+import fr.yanissou.taupegun.tools.Title;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -13,11 +11,13 @@ public class StartRunnable implements Runnable {
     private int compteur;
     private BukkitTask task;
     private Taupegun instance;
+    private String message;
+
 
     public StartRunnable(Taupegun instance) {
         this.compteur = 10;
         this.instance = instance;
-
+        this.message = "§7Lancement de la partie dans §c" + getCompteur() + " §7secondes !";
 
     }
 
@@ -47,7 +47,7 @@ public class StartRunnable implements Runnable {
             float pitch = 2.0f - ((float) (10 - getCompteur()) / 10.0f * 1.4f);
             Bukkit.getOnlinePlayers().forEach(player -> {
                 player.playSound(player.getLocation(), Sound.ORB_PICKUP, 1.0f, pitch);
-                TitleAPI.sendTitle(player,0,21,0, "§c"+ getCompteur(),"§7Lancement de la partie dans");
+                new Title(String.valueOf(getCompteur()),"§7Lancement de la partie dans").send(Bukkit.getOnlinePlayers(),0,2,0);
             });
             setCompteur(getCompteur() - 1);
 

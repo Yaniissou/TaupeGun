@@ -1,5 +1,6 @@
 package fr.yanissou.taupegun.listeners;
 
+import fr.yanissou.taupegun.Game;
 import fr.yanissou.taupegun.GameState;
 import fr.yanissou.taupegun.Taupegun;
 import fr.yanissou.taupegun.inventories.CustomItems;
@@ -92,9 +93,12 @@ public class PlayerListeners implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            event.setCancelled(true);
+        if (GameState.isState(GameState.WAITING)){
+            if (event.getEntity() instanceof Player) {
+                event.setCancelled(true);
+            }
         }
+
     }
 
     @EventHandler
@@ -137,7 +141,6 @@ public class PlayerListeners implements Listener {
                 if (!isValid(event)) return;
                 switch (event.getCurrentItem().getType()) {
                     case INK_SACK:
-                        instance.getScenarioManager().registerScenarios();
                         instance.getGame().startrebours();
                         break;
                     case COMMAND:

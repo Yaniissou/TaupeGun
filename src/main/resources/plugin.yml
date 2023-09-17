@@ -2,4 +2,10 @@ name: Taupegun
 version: '${project.version}'
 main: fr.yanissou.taupegun.Taupegun
 api-version: 1.20
-depend: [TitleAPI]
+commands:
+  say:
+    description: (HOST) Faire une annonce
+    #usage: "§c Usage : /say <message>"
+    permission: taupegun.use
+    aliases: /annonce
+

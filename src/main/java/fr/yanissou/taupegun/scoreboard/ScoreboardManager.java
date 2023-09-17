@@ -43,7 +43,7 @@ public class ScoreboardManager {
         {
             String ip = colorIpAt();
             for (PersonalScoreboard scoreboard : scoreboards.values())
-                Taupegun.getInstance().getExecutorMonoThread().execute(() -> scoreboard.setLines(ip));
+                Taupegun.getInstance().getExecutorMonoThread().execute(() -> scoreboard.setLines());
         }, 80, 80, TimeUnit.MILLISECONDS);
 
         reloadingTask = Taupegun.getInstance().getScheduledExecutorService().scheduleAtFixedRate(() ->

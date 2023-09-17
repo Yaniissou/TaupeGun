@@ -7,7 +7,9 @@ public enum Prefix {
 
     TAUPEGUN(ChatColor.DARK_GRAY + "[" + ChatColor.RED + ChatColor.BOLD + "TAUPE GUN" + ChatColor.DARK_GRAY + "] " + ChatColor.RESET),
     CLIDEBUG("[DEBUG]"),
-    IGDEBUG(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DEBUG" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET);
+    IGDEBUG(ChatColor.DARK_GRAY + "[" + ChatColor.DARK_AQUA + ChatColor.BOLD + "DEBUG" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET),
+    ERREUR(ChatColor.DARK_GRAY + "[" + ChatColor.RED + ChatColor.BOLD + "ERREUR" + ChatColor.DARK_GRAY + "] " + ChatColor.RESET),
+    HOST(ChatColor.RED  + "§lHOST ");
 
     private final String prefix;
     Prefix(String prefix) {

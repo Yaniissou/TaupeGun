@@ -1,6 +1,7 @@
 package fr.yanissou.taupegun;
 
 import com.sk89q.worldedit.entity.Player;
+import fr.yanissou.taupegun.commands.CommandSay;
 import fr.yanissou.taupegun.listeners.PlayerListeners;
 import fr.yanissou.taupegun.scoreboard.ScoreboardManager;
 import fr.yanissou.taupegun.tools.Prefix;
@@ -43,10 +44,10 @@ public final class Taupegun extends JavaPlugin {
         scheduledExecutorService = Executors.newScheduledThreadPool(16);
         executorMonoThread = Executors.newScheduledThreadPool(1);
         scoreboardManager = new ScoreboardManager();
-        customTeamManager.resetTeams(Bukkit.getOnlinePlayers());
 
         Bukkit.getLogger().warning(Prefix.CLIDEBUG.getPrefix() + " Starting is done, registering listeners");
         registerListeners();
+        registerCommands();
     }
 
     @Override
@@ -57,6 +58,10 @@ public final class Taupegun extends JavaPlugin {
 
     public void registerListeners(){
         Bukkit.getPluginManager().registerEvents(new PlayerListeners(this),this);
+    }
+
+    private void registerCommands(){
+        getCommand("say").setExecutor(new CommandSay());
     }
     public UserManager getUserManager() {
         return userManager;
